@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BGS Restaurant - Menu | Loyal to Quality</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8f9fa;color:#2d3436;line-height:1.6}
+        
+        .header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:14px 0;position:sticky;top:0;z-index:1000}
+        .container{max-width:1200px;margin:0 auto;padding:0 16px}
+        .header .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px}
+        .nav{display:flex;gap:14px;align-items:center}
+        .nav a{color:#fff;text-decoration:none;font-weight:500;font-size:13px;transition:color 0.3s}
+        .nav a:hover,.nav a.active{color:#e85d04}
+        
+        .hero{background:linear-gradient(135deg,#e85d04,#dc2f02);color:#fff;text-align:center;padding:40px 0}
+        .hero h2{font-size:28px;margin-bottom:4px}
+        .hero-buttons{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+        .btn{padding:9px 18px;border:2px solid #fff;background:rgba(255,255,255,.1);color:#fff;border-radius:25px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn:hover{background:rgba(255,255,255,.2)}
+        .btn-solid{background:#fff;color:#e85d04;border:none}
+        .btn-solid:hover{background:#ffe0d0}
+        
+        .search-bar{max-width:600px;margin:16px auto}
+        .search-bar input{width:100%;padding:10px 16px;border:2px solid #e0e0e0;border-radius:25px;font-size:14px}
+        .filters{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+        .filter-btn{padding:5px 12px;border:2px solid #e0e0e0;background:#fff;border-radius:16px;cursor:pointer;font-weight:500;font-size:11px;transition:all 0.2s}
+        .filter-btn.active,.filter-btn:hover{background:#e85d04;color:#fff;border-color:#e85d04}
+        .quick-filters{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:10px}
+        .quick-btn{padding:5px 10px;background:#fff;border:none;border-radius:16px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);font-size:11px;transition:all 0.2s}
+        .quick-btn:hover{background:#e85d04;color:#fff}
+        
+        /* Menu Grid with Real Food Images */
+        .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;padding:10px 0 30px}
+        
+        .menu-card{
+            background:#fff;
+            border-radius:16px;
+            overflow:hidden;
+            box-shadow:0 4px 20px rgba(0,0,0,0.08);
+            cursor:pointer;
+            transition:all 0.3s ease;
+            position:relative;
+        }
+        .menu-card:hover{
+            transform:translateY(-6px);
+            box-shadow:0 16px 40px rgba(232,93,4,0.18);
+        }
+        .menu-card-image{
+            width:100%;
+            height:190px;
+            object-fit:cover;
+            background:#f0f0f0;
+            transition:transform 0.5s;
+        }
+        .menu-card:hover .menu-card-image{transform:scale(1.05)}
+        .menu-card-image-overlay{
+            position:absolute;top:0;left:0;right:0;bottom:0;
+            background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,0.7) 100%);
+            opacity:0;transition:opacity 0.3s;
+            display:flex;align-items:flex-end;padding:16px;
+        }
+        .menu-card:hover .menu-card-image-overlay{opacity:1}
+        .menu-card-image-overlay span{
+            color:#fff;font-size:11px;background:rgba(232,93,4,0.9);
+            padding:6px 14px;border-radius:20px;font-weight:600;
+        }
+        
+        .menu-card-body{padding:16px;position:relative}
+        .badges{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+        .badge{padding:3px 8px;border-radius:8px;font-size:9px;font-weight:700}
+        .badge-fasting{background:#55efc4;color:#2d3436}
+        .badge-family{background:#fdcb6e;color:#2d3436}
+        .badge-popular{background:#ff6b6b;color:#fff}
+        .badge-new{background:#00b894;color:#fff}
+        .badge-chicken{background:#e85d04;color:#fff}
+        .badge-juice{background:#74b9ff;color:#fff}
+        .badge-side{background:#dfe6e9;color:#2d3436}
+        
+        .menu-card h3{font-size:16px;margin-bottom:4px;color:#1a1a2e}
+        .menu-card .subcategory{font-size:10px;color:#e85d04;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .desc{color:#636e72;font-size:12px;margin-bottom:12px;line-height:1.5}
+        .menu-card-footer{display:flex;justify-content:space-between;align-items:center}
+        .price{font-size:22px;font-weight:800;color:#e85d04}
+        .btn-order{
+            padding:8px 18px;
+            background:linear-gradient(135deg,#e85d04,#dc2f02);
+            color:#fff;border:none;border-radius:25px;
+            font-weight:600;cursor:pointer;font-size:12px;
+            transition:all 0.3s;
+        }
+        .btn-order:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(232,93,4,0.3)}
+        
+        /* Modal for details */
+        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center}
+        .modal.active{display:flex}
+        .modal-content{background:#fff;border-radius:20px;overflow:hidden;max-width:500px;width:94%;max-height:85vh;overflow-y:auto;position:relative;animation:slideUp 0.3s ease}
+        @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+        .modal-image{width:100%;height:250px;object-fit:cover}
+        .modal-body{padding:24px}
+        .modal-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.5);color:#fff;border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;z-index:1}
+        .modal-badges{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+        .modal h2{font-size:24px;margin-bottom:4px}
+        .modal .modal-category{font-size:12px;color:#e85d04;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+        .modal .modal-desc{color:#636e72;font-size:14px;line-height:1.6;margin-bottom:20px}
+        .modal .modal-price{font-size:32px;font-weight:800;color:#e85d04;margin-bottom:16px}
+        .modal .btn-order-large{
+            width:100%;padding:14px;
+            background:linear-gradient(135deg,#e85d04,#dc2f02);
+            color:#fff;border:none;border-radius:12px;
+            font-size:16px;font-weight:700;cursor:pointer;
+            transition:all 0.3s;
+        }
+        .modal .btn-order-large:hover{box-shadow:0 8px 25px rgba(232,93,4,0.3)}
+        
+        .chat-widget{position:fixed;bottom:14px;right:14px;z-index:1000}
+        .chat-toggle{width:48px;height:48px;border-radius:50%;background:#e85d04;color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 3px 12px rgba(232,93,4,.4)}
+        .chat-window{position:absolute;bottom:58px;right:0;width:320px;height:420px;background:#fff;border-radius:16px;box-shadow:0 6px 30px rgba(0,0,0,.2);display:none;flex-direction:column;overflow:hidden}
+        .chat-header{background:linear-gradient(135deg,#e85d04,#dc2f02);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+        .chat-messages{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+        .message{max-width:85%;padding:8px 12px;border-radius:12px;font-size:12px;white-space:pre-line;line-height:1.5}
+        .message.user{background:#e85d04;color:#fff;align-self:flex-end;border-radius:12px 12px 0 12px}
+        .message.bot{background:#f0f0f0;align-self:flex-start;border-radius:12px 12px 12px 0}
+        .chat-input-area{padding:10px;border-top:1px solid #e0e0e0;display:flex;gap:6px;align-items:center}
+        .chat-input-area input{flex:1;padding:8px 12px;border:1px solid #e0e0e0;border-radius:20px;font-size:12px}
+        .chat-input-area button{padding:8px 16px;background:#e85d04;color:#fff;border:none;border-radius:20px;cursor:pointer;font-size:12px;font-weight:600}
+        
+        .footer{background:#1a1a2e;color:#fff;padding:20px 0;text-align:center;margin-top:30px;font-size:12px}
+        
+        @media(max-width:768px){
+            .hero h2{font-size:22px}
+            .chat-window{width:calc(100vw - 24px);height:50vh;right:2px}
+            .menu-grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+            .modal-content{max-width:95%}
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo"><span>🍗</span><span>BGS Restaurant</span></div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="menu.html" class="active">Menu</a>
+                <a href="contact.html">Locations</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Discover Our Menu</h2>
+            <p>Tap any item for details • All prices include 15% VAT</p>
+            <div class="hero-buttons">
+                <button class="btn" onclick="feelingLucky()">🎲 Lucky Pick</button>
+                <button class="btn btn-solid" onclick="toggleChat(true)">💬 Ask AI</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Search menu items..." oninput="applyFilters()"></div>
+        <div class="filters" id="categoryFilters"></div>
+        <div class="quick-filters">
+            <button class="quick-btn" onclick="quickFilter('fasting')">🥬 Fasting</button>
+            <button class="quick-btn" onclick="quickFilter('chicken')">🍗 Chicken</button>
+            <button class="quick-btn" onclick="quickFilter('family')">👨‍👩‍👧‍👦 Family</button>
+            <button class="quick-btn" onclick="quickFilter('juice')">🥤 Juices</button>
+            <button class="quick-btn" onclick="quickFilter('under1000')">💰 Under ETB 1,000</button>
+            <button class="quick-btn" onclick="quickFilter('popular')">⭐ Popular</button>
+        </div>
+    </div>
+
+    <main class="container"><div class="menu-grid" id="menuGrid"></div></main>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content" id="detailContent"></div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-toggle" onclick="toggleChat()">💬</button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header"><strong>🤖 BGS Menu AI</strong><button onclick="toggleChat()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer">✕</button></div>
+            <div class="chat-messages" id="chatMessages"><div class="message bot">Welcome to BGS! 👋 Tap any menu card or ask me for recommendations!</div></div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Ask about our menu..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p><strong>BGS Restaurant & Poultry Farm</strong> — Loyal to Quality</p>
+            <p style="margin-top:4px;opacity:0.7">All prices include 15% VAT</p>
+        </div>
+    </footer>
+
+    <script>
+        // Complete BGS Menu with Free Unsplash Food Images
+        const menuItems = [
+            // FASTING MENU
+            { id:'f1', name:'BGS Fasting Salade', price:290, category:'fasting', subcategory:'Main Dishes', description:'Fresh mixed vegetables with our special fasting dressing. Light, healthy, and full of flavor.', image:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600', isFasting:true, isPopular:true },
+            { id:'f2', name:'BGS Veggy Wrap', price:450, category:'fasting', subcategory:'Main Dishes', description:'Fresh vegetables wrapped in soft pita bread with fasting-friendly sauce. A satisfying meal on the go.', image:'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600', isFasting:true },
+            { id:'f3', name:'Cooked Vegetables', price:550, category:'fasting', subcategory:'Main Dishes', description:'Seasonal vegetables fried with our special fasting sauce, served with warm pita bread.', image:'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600', isFasting:true, isPopular:true },
+            { id:'f4', name:'Salad with Rice', price:390, category:'fasting', subcategory:'Main Dishes', description:'Fresh garden salad served on a bed of fluffy rice with warm pita bread on the side.', image:'https://images.unsplash.com/photo-1536304929831-ee1ca9f6bbd2?w=600', isFasting:true },
+            { id:'f5', name:'French Fries', price:280, category:'fasting', subcategory:'Sides', description:'Crispy golden french fries, perfectly seasoned and served hot.', image:'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600', isFasting:true },
+            { id:'f6', name:'Mayonnaise', price:65, category:'fasting', subcategory:'Extras', description:'Extra portion of creamy mayonnaise.', image:'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=600', isFasting:true },
+            { id:'f7', name:'Extra Pita Bread', price:65, category:'fasting', subcategory:'Extras', description:'Freshly baked warm pita bread.', image:'https://images.unsplash.com/photo-1595855759920-86582396756a?w=600', isFasting:true },
+            { id:'f8', name:'Ketchup', price:20, category:'fasting', subcategory:'Extras', description:'Extra portion of ketchup.', image:'https://images.unsplash.com/photo-1589606663923-283bbd306229?w=600', isFasting:true },
+            
+            // JUICES
+            { id:'j1', name:'BGS Special Juice', price:350, category:'juice', subcategory:'Fresh Juices', description:'Our signature blend of fresh fruits — a secret recipe that keeps customers coming back!', image:'https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=600', isFasting:true, isPopular:true },
+            { id:'j2', name:'Orange Juice', price:300, category:'juice', subcategory:'Fresh Juices', description:'Freshly squeezed sweet oranges. Pure vitamin C goodness.', image:'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=600', isFasting:true },
+            { id:'j3', name:'Watermelon Juice', price:300, category:'juice', subcategory:'Fresh Juices', description:'Cool and refreshing fresh watermelon juice. Perfect for hot days.', image:'https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=600', isFasting:true },
+            { id:'j4', name:'Pineapple Juice', price:300, category:'juice', subcategory:'Fresh Juices', description:'Tropical fresh pineapple juice. Sweet, tangy, and refreshing.', image:'https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?w=600', isFasting:true },
+            { id:'j5', name:'Lemon Juice', price:240, category:'juice', subcategory:'Fresh Juices', description:'Freshly squeezed lemons. Zesty and invigorating.', image:'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=600', isFasting:true },
+            { id:'j6', name:'Strawberry Juice', price:350, category:'juice', subcategory:'Fresh Juices', description:'Sweet fresh strawberries blended to perfection. A crowd favorite!', image:'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=600', isFasting:true, isPopular:true },
+            { id:'j7', name:'Carrot Juice', price:300, category:'juice', subcategory:'Fresh Juices', description:'Fresh carrot juice. Healthy, natural, and delicious.', image:'https://images.unsplash.com/photo-1638174029992-6ebf4c8ab1c9?w=600', isFasting:true },
+            
+            // DRINKS
+            { id:'d1', name:'Soft Drink', price:100, category:'drink', subcategory:'Soft Drinks', description:'Assorted popular soft drinks. Served ice cold.', image:'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600' },
+            { id:'d2', name:'Ambo Water', price:100, category:'drink', subcategory:'Soft Drinks', description:'Ethiopian natural mineral water. Pure and refreshing.', image:'https://images.unsplash.com/photo-1523362628745-0c100150b504?w=600' },
+            { id:'d3', name:'Special Mojito', price:260, category:'drink', subcategory:'Mojito', description:'Refreshing mojito with fresh mint and lime. The perfect cooler.', image:'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=600' },
+            
+            // CHICKEN MAIN COURSES
+            { id:'c1', name:'Special Showarma', price:670, category:'chicken', subcategory:'Sandwiches', description:'Sliced chicken, creamy mayonnaise & aromatic spices wrapped in pita, topped with extra chicken meat. Served with crispy French Fries.', image:'https://images.unsplash.com/photo-1561651823-34feb02250e4?w=600', isPopular:true },
+            { id:'c2', name:'Normal Showarma', price:530, category:'chicken', subcategory:'Sandwiches', description:'Classic sliced chicken wrapped in soft pita bread. Served with golden French Fries.', image:'https://images.unsplash.com/photo-1625404791024-b1f4fd2b7e0b?w=600' },
+            { id:'c3', name:'Full Roasted Chicken', price:2800, category:'chicken', subcategory:'Roasted', description:'Whole chicken marinated with herbs & spices, slowly roasted on rotisserie using direct heat. Tender inside, crispy outside.', image:'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=600', isPopular:true },
+            { id:'c4', name:'Half Roasted Chicken', price:1500, category:'chicken', subcategory:'Roasted', description:'Half chicken, perfectly marinated and roasted on the rotisserie. Juicy and flavorful.', image:'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=600' },
+            { id:'c5', name:'Chicken Grill', price:1300, category:'chicken', subcategory:'Grilled', description:'Marinated chicken pieces grilled to perfection, served with seasoned rice.', image:'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=600' },
+            { id:'c6', name:'Chicken Wings', price:1700, category:'chicken', subcategory:'Wings', description:'9 pieces of succulent chicken wings, served with rice and warm pita bread. A BGS classic!', image:'https://images.unsplash.com/photo-1608039829572-78524f79c4c2?w=600', isPopular:true },
+            { id:'c7', name:'KAPSA', price:1400, category:'chicken', subcategory:'Special', description:'Traditional chicken Kapsa — aromatic spiced rice with tender chicken.', image:'https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?w=600' },
+            { id:'c8', name:'Mofo', price:1400, category:'chicken', subcategory:'Steamed', description:'Marinated and steamed chicken, served with rice, hot sauce, creamy mayonnaise, and pita.', image:'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600' },
+            { id:'c9', name:'Akeda', price:1050, category:'chicken', subcategory:'Tibs', description:'Traditional Chicken Tibs, sautéed with onions and peppers. Served with pita bread.', image:'https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=600' },
+            { id:'c10', name:'Fassa', price:1050, category:'chicken', subcategory:'Tibs', description:'Hot and spicy minced chicken Tibs. For those who love heat! Served with pita.', image:'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600', isPopular:true },
+            { id:'c11', name:'Fajita', price:1050, category:'chicken', subcategory:'Tibs', description:'Chicken Shekla Tibse served sizzling hot with pita bread.', image:'https://images.unsplash.com/photo-1611574473884-9ce47e8d98b8?w=600' },
+            { id:'c12', name:'Grill Chicken Breast', price:1140, category:'chicken', subcategory:'Grilled', description:'Marinated grilled chicken breast with cooked vegetables, served with rice and pita.', image:'https://images.unsplash.com/photo-1535231540604-72e8fbaf8cdb?w=600' },
+            { id:'c13', name:'Roasted Chicken Leg', price:850, category:'chicken', subcategory:'Roasted', description:'Marinated and roasted chicken leg quarter, served with rice and pita bread.', image:'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600' },
+            
+            // FAMILY STYLE
+            { id:'fam1', name:'Family Style (Full)', price:2900, category:'family', subcategory:'Family Meals', description:'The ultimate family feast! Chicken Wings, Special Chicken, served with Rice, Pita, Hot Sauce & Mayonnaise. Perfect for 4-6 people.', image:'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600', isFamily:true, isPopular:true },
+            { id:'fam2', name:'Family Style (Basic)', price:2450, category:'family', subcategory:'Family Meals', description:'Chicken Wings, Special Chicken & Mayonnaise. A delicious family meal for sharing.', image:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600', isFamily:true },
+            
+            // TAKEWAY
+            { id:'t1', name:'Takeaway Box', price:75, category:'takeaway', subcategory:'Takeaway', description:'Sturdy food container for taking your meal home.', image:'https://images.unsplash.com/photo-1594136955377-8b04436c2ec2?w=600' },
+            { id:'t2', name:'Takeaway Bag', price:40, category:'takeaway', subcategory:'Takeaway', description:'Convenient carry bag for your takeaway order.', image:'https://images.unsplash.com/photo-1604076913837-52ab5629fba9?w=600' },
+            { id:'t3', name:'Juice Cup', price:30, category:'takeaway', subcategory:'Takeaway', description:'Disposable cup for your fresh juice.', image:'https://images.unsplash.com/photo-1571767454098-246b94d3342e?w=600' },
+        ];
+
+        let currentCategory = 'all', currentQuickFilter = null;
+
+        const CATEGORIES = [
+            { id:'all', label:'All', emoji:'🍽️' },
+            { id:'chicken', label:'Chicken', emoji:'🍗' },
+            { id:'fasting', label:'Fasting', emoji:'🥬' },
+            { id:'family', label:'Family', emoji:'👨‍👩‍👧‍👦' },
+            { id:'juice', label:'Juices', emoji:'🥤' },
+            { id:'drink', label:'Drinks', emoji:'🍹' },
+        ];
+
+        function renderCategories() {
+            document.getElementById('categoryFilters').innerHTML = CATEGORIES.map(c => 
+                `<button class="filter-btn ${c.id === 'all' ? 'active' : ''}" onclick="filterByCategory('${c.id}')">${c.emoji} ${c.label}</button>`
+            ).join('');
+        }
+
+        function renderMenu(items) {
+            const grid = document.getElementById('menuGrid');
+            if (!items.length) {
+                grid.innerHTML = '<div style="text-align:center;padding:40px;grid-column:1/-1"><div style="font-size:40px">😔</div><h3>No items found</h3><p style="color:#636e72">Try a different search or filter</p></div>';
+                return;
+            }
+            grid.innerHTML = items.map(i => `
+                <div class="menu-card" onclick="openDetail('${i.id}')">
+                    <div style="position:relative;overflow:hidden">
+                        <img class="menu-card-image" src="${i.image}" alt="${i.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600'">
+                        <div class="menu-card-image-overlay"><span>👆 Tap for details</span></div>
+                    </div>
+                    <div class="menu-card-body">
+                        <div class="badges">
+                            ${i.isFasting ? '<span class="badge badge-fasting">🥬 Fasting</span>' : ''}
+                            ${i.isFamily ? '<span class="badge badge-family">👨‍👩‍👧‍👦 Family</span>' : ''}
+                            ${i.isPopular ? '<span class="badge badge-popular">⭐ Popular</span>' : ''}
+                            ${i.category === 'chicken' ? '<span class="badge badge-chicken">🍗 Chicken</span>' : ''}
+                            ${i.category === 'juice' ? '<span class="badge badge-juice">🥤 Juice</span>' : ''}
+                            ${i.category === 'fasting' && i.subcategory === 'Sides' ? '<span class="badge badge-side">🍟 Side</span>' : ''}
+                        </div>
+                        <div class="subcategory">${i.subcategory || i.category}</div>
+                        <h3>${i.name}</h3>
+                        <p class="desc">${i.description.substring(0, 80)}...</p>
+                        <div class="menu-card-footer">
+                            <span class="price">ETB ${i.price.toFixed(2)}</span>
+                            <button class="btn-order" onclick="event.stopPropagation();openDetail('${i.id}')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openDetail(id) {
+            const item = menuItems.find(i => i.id === id);
+            if (!item) return;
+            
+            document.getElementById('detailContent').innerHTML = `
+                <button class="modal-close" onclick="closeDetail()">✕</button>
+                <img class="modal-image" src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600'">
+                <div class="modal-body">
+                    <div class="modal-badges">
+                        ${item.isFasting ? '<span class="badge badge-fasting">🥬 Fasting</span>' : ''}
+                        ${item.isFamily ? '<span class="badge badge-family">👨‍👩‍👧‍👦 Family</span>' : ''}
+                        ${item.isPopular ? '<span class="badge badge-popular">⭐ Popular</span>' : ''}
+                        ${item.category === 'chicken' ? '<span class="badge badge-chicken">🍗 Chicken</span>' : ''}
+                    </div>
+                    <div class="modal-category">${item.subcategory || item.category}</div>
+                    <h2>${item.name}</h2>
+                    <p class="modal-desc">${item.description}</p>
+                    <div class="modal-price">ETB ${item.price.toFixed(2)}</div>
+                    <p style="font-size:12px;color:#636e72;margin-bottom:12px">*All prices include 15% VAT</p>
+                    <button class="btn-order-large" onclick="window.location.href='contact.html'">📞 Call to Order Now</button>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetail() {
+            document.getElementById('detailModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function filterByCategory(c) {
+            currentCategory = c;
+            document.querySelectorAll('.filter-btn').forEach((b, i) => {
+                b.classList.toggle('active', CATEGORIES[i].id === c);
+            });
+            applyFilters();
+        }
+
+        function quickFilter(t) {
+            currentQuickFilter = currentQuickFilter === t ? null : t;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filtered = [...menuItems];
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(i => i.category === currentCategory);
+            }
+            
+            if (query) {
+                filtered = filtered.filter(i => 
+                    i.name.toLowerCase().includes(query) || 
+                    i.description.toLowerCase().includes(query) ||
+                    (i.subcategory || '').toLowerCase().includes(query)
+                );
+            }
+            
+            if (currentQuickFilter === 'fasting') filtered = filtered.filter(i => i.isFasting);
+            else if (currentQuickFilter === 'chicken') filtered = filtered.filter(i => i.category === 'chicken');
+            else if (currentQuickFilter === 'family') filtered = filtered.filter(i => i.isFamily);
+            else if (currentQuickFilter === 'juice') filtered = filtered.filter(i => i.category === 'juice');
+            else if (currentQuickFilter === 'under1000') filtered = filtered.filter(i => i.price < 1000);
+            else if (currentQuickFilter === 'popular') filtered = filtered.filter(i => i.isPopular);
+            
+            renderMenu(filtered);
+        }
+
+        function feelingLucky() {
+            const random = menuItems[Math.floor(Math.random() * menuItems.length)];
+            openDetail(random.id);
+        }
+
+        // Chat
+        let chatOpen = false;
+        function toggleChat(force) {
+            chatOpen = force !== undefined ? force : !chatOpen;
+            document.getElementById('chatWindow').style.display = chatOpen ? 'flex' : 'none';
+            if (chatOpen) document.getElementById('chatInput').focus();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+            addMessage('user', msg);
+            setTimeout(() => {
+                addMessage('bot', smartReply(msg));
+            }, 500);
+        }
+
+        function smartReply(msg) {
+            const q = msg.toLowerCase();
+            const found = menuItems.filter(i => 
+                i.name.toLowerCase().includes(q) || 
+                (i.subcategory || '').toLowerCase().includes(q)
+            );
+            if (found.length > 0 && found.length <= 3) {
+                return found.map(i => `🍗 **${i.name}**\n   ETB ${i.price.toFixed(2)}\n   ${i.description.substring(0,60)}...\n`).join('\n');
+            }
+            if (found.length > 3) {
+                return `Found ${found.length} items!\n${found.slice(0,4).map(i => `• ${i.name} — ETB ${i.price.toFixed(2)}`).join('\n')}\n\nBe more specific for details!`;
+            }
+            if (q.includes('fasting') || q.includes('vegetarian')) {
+                const fasting = menuItems.filter(i => i.isFasting && i.subcategory === 'Main Dishes');
+                return `🥬 **Fasting Main Dishes:**\n${fasting.map(i => `• ${i.name} — ETB ${i.price.toFixed(2)}`).join('\n')}`;
+            }
+            if (q.includes('recommend') || q.includes('best') || q.includes('popular')) {
+                const popular = menuItems.filter(i => i.isPopular).slice(0,5);
+                return `⭐ **Customer Favorites:**\n${popular.map(i => `• ${i.name} — ETB ${i.price.toFixed(2)}`).join('\n')}`;
+            }
+            if (q.includes('family')) {
+                const fam = menuItems.filter(i => i.isFamily);
+                return `👨‍👩‍👧‍👦 **Family Meals:**\n${fam.map(i => `• ${i.name} — ETB ${i.price.toFixed(2)}`).join('\n')}`;
+            }
+            return `Welcome to BGS! 🍗 Try asking:\n• "Show fasting options"\n• "Recommend me something"\n• "Family meals"\n• "Chicken dishes"\n• Tap any card for full details!`;
+        }
+
+        function addMessage(type, text) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.textContent = text;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderMenu(menuItems);
+        });
+        document.addEventListener('click', e => {
+            if (e.target.classList.contains('modal') && e.target.id === 'detailModal') closeDetail();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeDetail();
+        });
+    </script>
+</body>
+</html>
